@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beans xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="
+ http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/util
+ http://www.springframework.org/schema/util/spring-util-2.0.xsd
+ http://cxf.apache.org/jaxrs
+ http://cxf.apache.org/schemas/jaxrs.xsd">
+	<jaxrs:server address="/" id="connectionService">
+		<jaxrs:serviceBeans>
+			<ref bean="actionHandler"/>
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+	   		<bean class="org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider"/>
+		</jaxrs:providers>
+	</jaxrs:server>
+	
+	<bean class="de.hd.seegarten.presence.restfulsvc.RuleEngineActionHandlerImpl" id="actionHandler">
+		<constructor-arg ref="campaignDAO"></constructor-arg>    
+	</bean>
+	
+	<bean class="de.hd.seegarten.presence.dao.CampaignEmDAO" id="campaignDAO">
+	    <constructor-arg ref="entityManagerFactory"></constructor-arg>
+	</bean>
+	
+	<bean id="dbDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    	<property name="jndiName" value="java:comp/env/jdbc/DefaultDB"/>
+	</bean>
+	
+	<bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+      <property name="dataSource" ref="dbDataSource" />
+<!--       <property name="defaultSchema" value="NEO_11M580JJQOGGDKE79HG726PS2" /> -->
+      <property name="changeLog" value="/WEB-INF/db.changelog.xml" />
+
+      <!--
+      contexts specifies the runtime contexts to use.
+      -->
+      <property name="contexts" value="test, production" />
+ 	</bean>
+	
+	<bean id='entityManagerFactory' 
+      class='org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean'>
+    <property name="persistenceUnitName" value="persistence-with-jpa"/>
+    <property name='dataSource' ref='dbDataSource' />
+    <property name="jpaPropertyMap">
+        <map>
+          <entry key="eclipselink.weaving" value="false"/>
+        </map>
+    </property>
+  </bean>
+</beans>

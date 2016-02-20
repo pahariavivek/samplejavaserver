@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="vivek">
+        <preConditions onFail="MARK_RAN">
+	       <not><tableExists tableName="T_CAMPAIGN"/></not>
+	    </preConditions>
+        <createTable tableName="T_CAMPAIGN">
+            <column name="UCID" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BATTERY_LEVEL" type="float"/>
+            <column name="CARRIER" type="varchar(255)"/>
+            <column name="CONNECTIVITY_TYPE" type="varchar(255)"/>
+            <column name="TIME_ZONE" type="varchar(255)"/>
+            <column name="LATITUDE" type="float"/>
+            <column name="LONGITUDE" type="float"/>
+            <column name="VELOCITY" type="float"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="vivek">
+        <addColumn tableName="T_CAMPAIGN">
+        	<column name="LAST_UPDATE" type="varchar(35)"/>
+    	</addColumn>
+	</changeSet>
+	<changeSet id="3" author="vivek">
+        <addColumn tableName="T_CAMPAIGN">
+        	<column name="USER_NOTE" type="varchar(140)"/>
+    	</addColumn>
+	</changeSet>
+	<changeSet id="4" author="vivek">
+        <addColumn tableName="T_CAMPAIGN">
+        	<column name="CARRIER_CELLULAR_DATA" type="varchar(140)"/>
+    	</addColumn>
+	</changeSet>
+    
+</databaseChangeLog>
